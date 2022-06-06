@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "Map.h"
+
+class Map;
 
 class NPC : public sf::CircleShape {
 public:

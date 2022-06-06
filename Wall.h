@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <Map.h>
+
+class Map;
 
 class Wall : public sf::RectangleShape {
 public:

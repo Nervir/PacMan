@@ -28,4 +28,5 @@ private:
     std::vector<Item> items_;
     Player player_;
     NPC npc_;
+    sf::Clock clock_;
 };

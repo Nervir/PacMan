@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "Map.h"
 
 Player::Player(Map& map, int position_x, int position_y) : map_(map), sf::CircleShape(map_.SquareSize() / 2) {
     setPosition(position_x * map_.SquareSize(), position_y * map_.SquareSize());

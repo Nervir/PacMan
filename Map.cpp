@@ -1,5 +1,7 @@
 #include "Map.h"
 
+#include "MyFont.h"
+
 Map::Map(sf::RenderWindow& window) : window_(window), player_(*this, 1, 1), npc_(*this, 8, 8) {
     //read the map from a flie
     std::ifstream infile("Map1.txt");
@@ -54,6 +56,8 @@ void Map::Draw() {
         window_.draw(text);
     }
     else {
+        auto elapsed = clock_.restart();
+        Animate(elapsed);
         DrawWalls();
         DrawItems();
         DrawPlayer();
@@ -74,7 +78,7 @@ void Map::Animate(const sf::Time& elapsed) {
 bool Map::PlayerGetItem(sf::Rect<float> player_bounds) {
     for (int i = 0; i < items_.size(); i++) {
         if (player_bounds.intersects(items_[i].getGlobalBounds())) {
-            //items_.erase(items_.begin() + i);
+            items_.erase(items_.begin() + i);
             return true;
         }
     }
