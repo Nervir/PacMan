@@ -124,3 +124,13 @@ bool Player::EvenPosition() {
     }
     return false;
 }
+
+int Player::ReturnPosition(char xy) {
+    if (xy == 'x') {
+        return position_x_;
+    }
+    else if (xy == 'y') {
+        return position_y_;
+    }
+    return -1;
+}

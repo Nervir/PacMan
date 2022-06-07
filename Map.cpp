@@ -77,7 +77,7 @@ void Map::Draw() {
 
 void Map::Animate(const sf::Time& elapsed) {
     player_.animate(elapsed);
-    npc_.animate(elapsed);
+    npc_.FollowPlayer(elapsed, player_.ReturnPosition('x'), player_.ReturnPosition('y'));
     if (PlayerGetItem(player_.getGlobalBounds())) player_.ScoreUp();
 }
 

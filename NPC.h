@@ -6,7 +6,8 @@ class Map;
 class NPC : public sf::CircleShape {
 public:
     NPC(Map& map, int position_x, int position_y);
-    void animate(const sf::Time& time);
+    void animate(const sf::Time& elapsed);
+    void FollowPlayer(const sf::Time& elapsed, int player_position_x, int player_position_y);
     bool EvenPosition();
 private:
     int position_x_;
