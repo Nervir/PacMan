@@ -6,6 +6,7 @@
 #include <Item.h>
 #include <Player.h>
 #include <NPC.h>
+#include <SFML/Audio.hpp>
 
 class Map {
 public:
@@ -30,4 +31,6 @@ private:
     Player player_;
     NPC npc_;
     sf::Clock clock_;
+    sf::SoundBuffer coin_sound_;
+    sf::Sound sound_;
 };

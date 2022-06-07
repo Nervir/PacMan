@@ -6,4 +6,5 @@ C:\GLP\PacMan\NPC.cpp(36,23): warning C4244: 'argument': conversion from 'time_t
   Player.cpp
   Wall.cpp
   Generating Code...
+  LINK : C:\GLP\PacMan\x64\Debug\PacMan.exe not found or not built by the last incremental link; performing full link
   PacMan.vcxproj -> C:\GLP\PacMan\x64\Debug\PacMan.exe

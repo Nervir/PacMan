@@ -1,6 +1,7 @@
 #include "Map.h"
 
 #include "MyFont.h"
+#include <iostream>
 
 Map::Map(sf::RenderWindow& window) : window_(window), player_(*this, 1, 1), npc_(*this, 8, 8) {
     //read the map from a flie
@@ -21,6 +22,9 @@ Map::Map(sf::RenderWindow& window) : window_(window), player_(*this, 1, 1), npc_
             }
         }
         i++;
+    }
+    if (!coin_sound_.loadFromFile("game-treasure-coin.wav")) {
+        std::cout << "Couldn't load coin sound" << std::endl;
     }
 }
 
@@ -78,7 +82,11 @@ void Map::Draw() {
 void Map::Animate(const sf::Time& elapsed) {
     player_.animate(elapsed);
     npc_.FollowPlayer(elapsed, player_.ReturnPosition('x'), player_.ReturnPosition('y'));
-    if (PlayerGetItem(player_.getGlobalBounds())) player_.ScoreUp();
+    if (PlayerGetItem(player_.getGlobalBounds())) { 
+        player_.ScoreUp(); 
+        sound_.setBuffer(coin_sound_);
+        sound_.play();
+    }
 }
 
 const std::vector<std::vector<bool>>& Map::ReturnYXMap() {
