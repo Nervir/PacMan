@@ -55,6 +55,12 @@ void Map::Draw() {
         sf::Text text = game_over.GameOverFont(text1);
         window_.draw(text);
     }
+    else if (items_.size() == 0) {
+        MyFont game_over(window_);
+        std::string text1 = "You Won!";
+        sf::Text text = game_over.GameOverFont(text1);
+        window_.draw(text);
+    }
     else {
         auto elapsed = clock_.restart();
         Animate(elapsed);
