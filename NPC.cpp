@@ -1,5 +1,7 @@
 #include "NPC.h"
 #include "Map.h"
+#include <stdlib.h>
+#include <time.h>
 
 NPC::NPC(Map& map, int position_x, int position_y) : map_(map), sf::CircleShape(map_.SquareSize() / 2) {
     setPosition(position_x * map_.SquareSize(), position_y * map_.SquareSize());
@@ -7,55 +9,98 @@ NPC::NPC(Map& map, int position_x, int position_y) : map_(map), sf::CircleShape(
 }
 
 void NPC::animate(const sf::Time& elapsed) {
-    if (last_direction_ == 0) {
-        srand((unsigned)time(0));
-        last_direction_ = 1 + (rand() % 4);
-    }
-    if (last_direction_ == 1) {
-        move(speed_ * elapsed.asSeconds(), 0.f);
-        //get his bounding box
-        auto bounding_box = getGlobalBounds();
-        //check if it overlaps with a wall
-        for (auto wall : map_.ReturnWalls()) {
-            if (bounding_box.intersects(wall.getGlobalBounds())) {
-                //if so, move him back same amount
-                move(-speed_ * elapsed.asSeconds(), 0.f);
-                last_direction_ = 0;
-                break;
-            }
+
+    //update player position in relation to y_x_map_ if it's on a square
+    if (EvenPosition()) {
+        position_x_ = static_cast<int>(getPosition().x / map_.SquareSize());
+        position_y_ = static_cast<int>(getPosition().y / map_.SquareSize());
+
+        //check available directions
+        std::vector<int> directions;
+        if (map_.ReturnYXMap()[position_y_][position_x_ + 1] == true) {
+            directions.push_back(1);
+        }
+        if (map_.ReturnYXMap()[position_y_][position_x_ - 1] == true) {
+            directions.push_back(2);
+        }
+        if (map_.ReturnYXMap()[position_y_ + 1][position_x_] == true) {
+            directions.push_back(3);
+        }
+        if (map_.ReturnYXMap()[position_y_ - 1][position_x_] == true) {
+            directions.push_back(4);
+        }
+
+        //if not moving or on at an intersection, roll a random direction from available directions
+        if (old_direction_ == 0 || directions.size() > 2) {
+            srand(time(NULL));
+            int random_number = rand() % directions.size();
+            old_direction_ = directions[random_number];
         }
     }
-    if (last_direction_ == 2) {
-        move(-speed_ * elapsed.asSeconds(), 0.f);
-        auto bounding_box = getGlobalBounds();
-        for (auto wall : map_.ReturnWalls()) {
-            if (bounding_box.intersects(wall.getGlobalBounds())) {
-                move(speed_ * elapsed.asSeconds(), 0.f);
-                last_direction_ = 0;
-                break;
-            }
+
+    //Check if old_direction is viable
+    if (old_direction_ == 1 && map_.ReturnYXMap()[position_y_][position_x_ + 1] == false) {
+        old_direction_ = 0;
+    }
+
+    if (old_direction_ == 2 && map_.ReturnYXMap()[position_y_][position_x_ - 1] == false) {
+        old_direction_ = 0;
+    }
+
+    if (old_direction_ == 3 && map_.ReturnYXMap()[position_y_ + 1][position_x_] == false) {
+        old_direction_ = 0;
+    }
+
+    if (old_direction_ == 4 && map_.ReturnYXMap()[position_y_ - 1][position_x_] == false) {
+        old_direction_ = 0;
+    }
+
+    //Move in old_direction
+    float percent = 1.1f;
+
+    if (old_direction_ == 1) {
+        if (getPosition().x > ((position_x_ + 1) * map_.SquareSize()) - (percent * speed_ * elapsed.asSeconds())) {
+            setPosition((position_x_ + 1) * map_.SquareSize(), position_y_ * map_.SquareSize());
+        }
+        else {
+            move(speed_ * elapsed.asSeconds(), 0.f);
         }
     }
-    if (last_direction_ == 3) {
-        move(0.f, speed_ * elapsed.asSeconds());
-        auto bounding_box = getGlobalBounds();
-        for (auto wall : map_.ReturnWalls()) {
-            if (bounding_box.intersects(wall.getGlobalBounds())) {
-                move(0.f, -speed_ * elapsed.asSeconds());
-                last_direction_ = 0;
-                break;
-            }
+
+    if (old_direction_ == 2) {
+        if (getPosition().x < ((position_x_ - 1) * map_.SquareSize()) + (percent * speed_ * elapsed.asSeconds())) {
+            setPosition((position_x_ - 1) * map_.SquareSize(), position_y_ * map_.SquareSize());
+        }
+        else {
+            move(-speed_ * elapsed.asSeconds(), 0.f);
         }
     }
-    if (last_direction_ == 4) {
-        move(0.f, -speed_ * elapsed.asSeconds());
-        auto bounding_box = getGlobalBounds();
-        for (auto wall : map_.ReturnWalls()) {
-            if (bounding_box.intersects(wall.getGlobalBounds())) {
-                move(0.f, speed_ * elapsed.asSeconds());
-                last_direction_ = 0;
-                break;
-            }
+
+    if (old_direction_ == 3) {
+        if (getPosition().y > ((position_y_ + 1) * map_.SquareSize()) - (percent * speed_ * elapsed.asSeconds())) {
+            setPosition(position_x_ * map_.SquareSize(), (position_y_ + 1) * map_.SquareSize());
+        }
+        else {
+            move(0.f, speed_ * elapsed.asSeconds());
         }
     }
+
+    if (old_direction_ == 4) {
+        if (getPosition().y < ((position_y_ - 1) * map_.SquareSize()) + (percent * speed_ * elapsed.asSeconds())) {
+            setPosition(position_x_ * map_.SquareSize(), (position_y_ - 1) * map_.SquareSize());
+        }
+        else {
+            move(0.f, -speed_ * elapsed.asSeconds());
+        }
+    }
+}
+
+bool NPC::EvenPosition() {
+    if (getPosition().x == static_cast<int>(getPosition().x) &&
+        getPosition().y == static_cast<int>(getPosition().y) &&
+        static_cast<int>(getPosition().x) % static_cast<int>(map_.SquareSize()) == 0 &&
+        static_cast<int>(getPosition().y) % static_cast<int>(map_.SquareSize()) == 0) {
+        return true;
+    }
+    return false;
 }
