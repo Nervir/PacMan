@@ -17,6 +17,7 @@ public:
     void DrawNPC();
     void Draw();
     void Animate(const sf::Time& elapsed);
+    const std::vector<std::vector<bool>>& ReturnYXMap();
     std::vector<Wall> ReturnWalls();
     std::vector<Item> ReturnItems();
     bool PlayerGetItem(sf::Rect<float> player_bounds);

@@ -9,6 +9,7 @@ int main()
 {
     sf::RenderWindow window(sf::VideoMode(200, 220), "SFML works!");
     Map map(window);
+    window.setVerticalSyncEnabled(true);
 
     while (window.isOpen())
     {

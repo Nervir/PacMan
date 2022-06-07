@@ -1,8 +1,2 @@
-﻿  Item.cpp
-  Main.cpp
-  Map.cpp
-  NPC.cpp
-  Player.cpp
-  Wall.cpp
-  Generating Code...
+﻿  Player.cpp
   PacMan.vcxproj -> C:\GLP\PacMan\x64\Debug\PacMan.exe

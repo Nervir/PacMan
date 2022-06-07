@@ -75,6 +75,10 @@ void Map::Animate(const sf::Time& elapsed) {
     if (PlayerGetItem(player_.getGlobalBounds())) player_.ScoreUp();
 }
 
+const std::vector<std::vector<bool>>& Map::ReturnYXMap() {
+    return y_x_map_;
+}
+
 bool Map::PlayerGetItem(sf::Rect<float> player_bounds) {
     for (int i = 0; i < items_.size(); i++) {
         if (player_bounds.intersects(items_[i].getGlobalBounds())) {
