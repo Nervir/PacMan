@@ -15,7 +15,7 @@ private:
     int position_x_;
     int position_y_;
     Map& map_;
-    float speed_ = 10.f;
+    float speed_ = 100.f;
     int score_ = 0;
     int old_direction_ = 0;
     int new_direction_ = 0;
