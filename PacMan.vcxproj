@@ -149,6 +149,7 @@
     <ClCompile Include="MyFont.cpp" />
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SpeedBoost.cpp" />
     <ClCompile Include="Star.cpp" />
     <ClCompile Include="Wall.cpp" />
   </ItemGroup>
@@ -158,6 +159,7 @@
     <ClInclude Include="MyFont.h" />
     <ClInclude Include="NPC.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="SpeedBoost.h" />
     <ClInclude Include="Star.h" />
     <ClInclude Include="Wall.h" />
   </ItemGroup>

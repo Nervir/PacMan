@@ -10,6 +10,7 @@ public:
     void ScoreUp();
     int ReturnScore();
     bool EvenPosition();
+    void SpeedBoost();
     int ReturnPosition(char xy);
 private:
     int position_x_;

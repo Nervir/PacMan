@@ -32,6 +32,9 @@ void Map::DrawItems() {
     for (auto star : stars_) {
         window_.draw(star);
     }
+    for (auto speed_boost : speed_boosts_) {
+        window_.draw(speed_boost);
+    }
 }
 
 float Map::SquareSize() {
@@ -66,10 +69,11 @@ void Map::Draw() {
         window_.draw(text);
     }
     else {
-        auto elapsed = clock_.restart();
+        Create_Random_Items();
+        DrawItems();
+        auto elapsed = clock_animated_.restart();
         Animate(elapsed);
         DrawWalls();
-        DrawItems();
         DrawPlayer();
         DrawNPC();
         MyFont score(window_);
@@ -82,10 +86,13 @@ void Map::Draw() {
 void Map::Animate(const sf::Time& elapsed) {
     player_.animate(elapsed);
     npc_.FollowPlayer(elapsed, player_.ReturnPosition('x'), player_.ReturnPosition('y'));
-    if (PlayerGetItem(player_.getGlobalBounds())) { 
+    if (PlayerGetStar(player_.getGlobalBounds())) { 
         player_.ScoreUp(); 
         sound_.setBuffer(coin_sound_);
         sound_.play();
+    }
+    if (PlayerGetSpeedBoost(player_.getGlobalBounds())) {
+        player_.SpeedBoost();
     }
 }
 
@@ -93,10 +100,20 @@ const std::vector<std::vector<bool>>& Map::ReturnYXMap() {
     return y_x_map_;
 }
 
-bool Map::PlayerGetItem(sf::Rect<float> player_bounds) {
+bool Map::PlayerGetStar(sf::Rect<float> player_bounds) {
     for (int i = 0; i < stars_.size(); i++) {
         if (player_bounds.intersects(stars_[i].getGlobalBounds())) {
             stars_.erase(stars_.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Map::PlayerGetSpeedBoost(sf::Rect<float> player_bounds) {
+    for (int i = 0; i < speed_boosts_.size(); i++) {
+        if (player_bounds.intersects(speed_boosts_[i].getGlobalBounds())) {
+            speed_boosts_.erase(speed_boosts_.begin() + i);
             return true;
         }
     }
@@ -109,4 +126,23 @@ std::vector<Wall> Map::ReturnWalls() {
 
 std::vector<Star> Map::ReturnStars() {
     return stars_;
+}
+
+void Map::Create_Random_Items() {
+    const sf::Time& elapsed = clock_random_items_.getElapsedTime();
+    if (elapsed.asSeconds() > 5) {
+        std::vector<std::tuple<int, int>> possible_map_slots;
+        for (int y = 0; y < y_x_map_.size(); y++) {
+            for (int x = 0; x < y_x_map_[y].size(); x++) {
+                if (y_x_map_[y][x]) {
+                    possible_map_slots.push_back(std::make_tuple(y, x));
+                }
+            }
+        }
+        auto item_slot = possible_map_slots[rand() % possible_map_slots.size()];
+        if (rand() % 2) {
+            speed_boosts_.push_back(SpeedBoost(*this, std::get<1>(item_slot), std::get<0>(item_slot)));
+        }
+        clock_random_items_.restart();
+    }
 }

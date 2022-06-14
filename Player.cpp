@@ -134,3 +134,7 @@ int Player::ReturnPosition(char xy) {
     }
     return -1;
 }
+
+void Player::SpeedBoost() {
+    speed_ *= 1.1f;
+}
