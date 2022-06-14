@@ -35,6 +35,9 @@ void Map::DrawItems() {
     for (auto speed_boost : speed_boosts_) {
         window_.draw(speed_boost);
     }
+    for (auto npc_eater : npc_eaters_) {
+        window_.draw(npc_eater);
+    }
 }
 
 float Map::SquareSize() {
@@ -56,7 +59,13 @@ void Map::DrawNPC() {
 }
 
 void Map::Draw() {
-    if (player_.getGlobalBounds().intersects(npc_.getGlobalBounds())) {
+    if (player_.getGlobalBounds().intersects(npc_.getGlobalBounds()) && player_.ReturnCanEatNPC()) {
+        MyFont game_over(window_);
+        std::string text1 = "You Won!";
+        sf::Text text = game_over.GameOverFont(text1);
+        window_.draw(text);
+    }
+    else if (player_.getGlobalBounds().intersects(npc_.getGlobalBounds())) {
         MyFont game_over(window_);
         std::string text1 = "Game Over";
         sf::Text text = game_over.GameOverFont(text1);
@@ -94,6 +103,9 @@ void Map::Animate(const sf::Time& elapsed) {
     if (PlayerGetSpeedBoost(player_.getGlobalBounds())) {
         player_.SpeedBoost();
     }
+    if (PlayerGetNPCEater(player_.getGlobalBounds())) {
+        player_.ChangeCanEatNPC(true);
+    }
 }
 
 const std::vector<std::vector<bool>>& Map::ReturnYXMap() {
@@ -114,6 +126,16 @@ bool Map::PlayerGetSpeedBoost(sf::Rect<float> player_bounds) {
     for (int i = 0; i < speed_boosts_.size(); i++) {
         if (player_bounds.intersects(speed_boosts_[i].getGlobalBounds())) {
             speed_boosts_.erase(speed_boosts_.begin() + i);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Map::PlayerGetNPCEater(sf::Rect<float> player_bounds) {
+    for (int i = 0; i < npc_eaters_.size(); i++) {
+        if (player_bounds.intersects(npc_eaters_[i].getGlobalBounds())) {
+            npc_eaters_.erase(npc_eaters_.begin() + i);
             return true;
         }
     }
@@ -142,6 +164,9 @@ void Map::Create_Random_Items() {
         auto item_slot = possible_map_slots[rand() % possible_map_slots.size()];
         if (rand() % 2) {
             speed_boosts_.push_back(SpeedBoost(*this, std::get<1>(item_slot), std::get<0>(item_slot)));
+        }
+        else {
+            npc_eaters_.push_back(NPCEater(*this, std::get<1>(item_slot), std::get<0>(item_slot)));
         }
         clock_random_items_.restart();
     }

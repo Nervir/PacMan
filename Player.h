@@ -12,6 +12,8 @@ public:
     bool EvenPosition();
     void SpeedBoost();
     int ReturnPosition(char xy);
+    bool ReturnCanEatNPC();
+    void ChangeCanEatNPC(bool can_eat_npc);
 private:
     int position_x_;
     int position_y_;
@@ -20,4 +22,5 @@ private:
     int score_ = 0;
     int old_direction_ = 0;
     int new_direction_ = 0;
+    bool can_eat_npc_ = false;
 };

@@ -148,6 +148,7 @@
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MyFont.cpp" />
     <ClCompile Include="NPC.cpp" />
+    <ClCompile Include="NPCEater.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="SpeedBoost.cpp" />
     <ClCompile Include="Star.cpp" />
@@ -158,6 +159,7 @@
     <ClInclude Include="Map.h" />
     <ClInclude Include="MyFont.h" />
     <ClInclude Include="NPC.h" />
+    <ClInclude Include="NPCEater.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SpeedBoost.h" />
     <ClInclude Include="Star.h" />

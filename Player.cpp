@@ -138,3 +138,11 @@ int Player::ReturnPosition(char xy) {
 void Player::SpeedBoost() {
     speed_ *= 1.1f;
 }
+
+bool Player::ReturnCanEatNPC() {
+    return can_eat_npc_;
+}
+
+void Player::ChangeCanEatNPC(bool can_eat_npc) {
+    can_eat_npc_ = can_eat_npc;
+}
