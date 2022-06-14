@@ -18,7 +18,7 @@ Map::Map(sf::RenderWindow& window) : window_(window), player_(*this, 1, 1), npc_
             }
             else if (a == '1') {
                 y_x_map_[i].push_back(true); //true means the spot it free
-                items_.push_back(Item(*this, int(y_x_map_[i].size()) - 1, int(y_x_map_.size()) - 1)); //creat an item in the coordinates of the spot
+                stars_.push_back(Star(*this, int(y_x_map_[i].size()) - 1, int(y_x_map_.size()) - 1)); //creat an item in the coordinates of the spot
             }
         }
         i++;
@@ -29,8 +29,8 @@ Map::Map(sf::RenderWindow& window) : window_(window), player_(*this, 1, 1), npc_
 }
 
 void Map::DrawItems() {
-    for (auto item : items_) {
-        window_.draw(item);
+    for (auto star : stars_) {
+        window_.draw(star);
     }
 }
 
@@ -59,7 +59,7 @@ void Map::Draw() {
         sf::Text text = game_over.GameOverFont(text1);
         window_.draw(text);
     }
-    else if (items_.size() == 0) {
+    else if (stars_.size() == 0) {
         MyFont game_over(window_);
         std::string text1 = "You Won!";
         sf::Text text = game_over.GameOverFont(text1);
@@ -94,9 +94,9 @@ const std::vector<std::vector<bool>>& Map::ReturnYXMap() {
 }
 
 bool Map::PlayerGetItem(sf::Rect<float> player_bounds) {
-    for (int i = 0; i < items_.size(); i++) {
-        if (player_bounds.intersects(items_[i].getGlobalBounds())) {
-            items_.erase(items_.begin() + i);
+    for (int i = 0; i < stars_.size(); i++) {
+        if (player_bounds.intersects(stars_[i].getGlobalBounds())) {
+            stars_.erase(stars_.begin() + i);
             return true;
         }
     }
@@ -107,6 +107,6 @@ std::vector<Wall> Map::ReturnWalls() {
     return walls_;
 }
 
-std::vector<Item> Map::ReturnItems() {
-    return items_;
+std::vector<Star> Map::ReturnStars() {
+    return stars_;
 }
