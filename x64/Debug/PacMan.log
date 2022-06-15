@@ -1,10 +1,2 @@
-﻿  Item.cpp
-  Main.cpp
-  Map.cpp
-  NPC.cpp
-C:\GLP\PacMan\NPC.cpp(36,23): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  NPCEater.cpp
-  Player.cpp
-  Wall.cpp
-  Generating Code...
+﻿  Main.cpp
   PacMan.vcxproj -> C:\GLP\PacMan\x64\Debug\PacMan.exe

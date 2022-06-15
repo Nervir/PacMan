@@ -23,4 +23,7 @@ private:
     int old_direction_ = 0;
     int new_direction_ = 0;
     bool can_eat_npc_ = false;
+    sf::Texture texture0_;
+    sf::Texture texture1_;
+    sf::Clock clock_;
 };

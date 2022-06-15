@@ -3,11 +3,33 @@
 #include <iostream>
 
 Player::Player(Map& map, int position_x, int position_y) : map_(map), sf::CircleShape(map_.SquareSize() / 2), position_x_(position_x), position_y_(position_y) {
-    setPosition(position_x_ * map_.SquareSize(), position_y_ * map_.SquareSize());
-    setFillColor(sf::Color::Green);
+    setOrigin(getRadius(), getRadius());
+    setPosition(position_x_ * map_.SquareSize() + getRadius(), position_y_ * map_.SquareSize() + getRadius());
+    if (!texture0_.loadFromFile("Circle1.png"))
+    {
+        std::cerr << "failed to load image" << std::endl;
+        exit(1);
+    }
+    setTexture(&texture0_);
+    if (!texture1_.loadFromFile("Circle3.png"))
+    {
+        std::cerr << "failed to load image" << std::endl;
+        exit(1);
+    }
 }
 
 void Player::animate(const sf::Time& elapsed) {
+
+    //animate movement
+    if (clock_.getElapsedTime().asSeconds() > 0.25f) {
+        if (getTexture() == &texture0_) {
+            setTexture(&texture1_);
+        }
+        else {
+            setTexture(&texture0_);
+        }
+        clock_.restart();
+    }
 
     //update player position in relation to y_x_map_ if it's on a square
     if (EvenPosition()) {
@@ -71,8 +93,9 @@ void Player::animate(const sf::Time& elapsed) {
     float percent = 1.1f;
 
     if (old_direction_ == 1) {
-        if (getPosition().x > ((position_x_ + 1) * map_.SquareSize()) - (percent * speed_ * elapsed.asSeconds())) {
-            setPosition((position_x_ + 1) * map_.SquareSize(), position_y_ * map_.SquareSize());
+        setRotation(0);
+        if (getPosition().x > ((position_x_ + 1) * map_.SquareSize() + getRadius()) - (percent * speed_ * elapsed.asSeconds())) {
+            setPosition((position_x_ + 1) * map_.SquareSize() + getRadius(), position_y_ * map_.SquareSize() + getRadius());
         }
         else {
             move(speed_ * elapsed.asSeconds(), 0.f);
@@ -80,8 +103,9 @@ void Player::animate(const sf::Time& elapsed) {
     }
 
     if (old_direction_ == 2) {
-        if (getPosition().x < ((position_x_ - 1) * map_.SquareSize()) + (percent * speed_ * elapsed.asSeconds())) {
-            setPosition((position_x_ - 1) * map_.SquareSize(), position_y_ * map_.SquareSize());
+        setRotation(180);
+        if (getPosition().x < ((position_x_ - 1) * map_.SquareSize() + getRadius()) + (percent * speed_ * elapsed.asSeconds())) {
+            setPosition((position_x_ - 1) * map_.SquareSize() + getRadius(), position_y_ * map_.SquareSize() + getRadius());
         }
         else {
             move(-speed_ * elapsed.asSeconds(), 0.f);
@@ -89,8 +113,9 @@ void Player::animate(const sf::Time& elapsed) {
     }
 
     if (old_direction_ == 3) {
-        if (getPosition().y > ((position_y_ + 1) * map_.SquareSize()) - (percent * speed_ * elapsed.asSeconds())) {
-            setPosition(position_x_ * map_.SquareSize(), (position_y_ + 1) * map_.SquareSize());
+        setRotation(90);
+        if (getPosition().y > ((position_y_ + 1) * map_.SquareSize() + getRadius()) - (percent * speed_ * elapsed.asSeconds())) {
+            setPosition(position_x_ * map_.SquareSize() + getRadius(), (position_y_ + 1) * map_.SquareSize() + getRadius());
         }
         else {
             move(0.f, speed_ * elapsed.asSeconds());
@@ -98,8 +123,9 @@ void Player::animate(const sf::Time& elapsed) {
     }
 
     if (old_direction_ == 4) {
-        if (getPosition().y < ((position_y_ - 1) * map_.SquareSize()) + (percent * speed_ * elapsed.asSeconds())) {
-            setPosition(position_x_ * map_.SquareSize(), (position_y_ - 1) * map_.SquareSize());
+        setRotation(270);
+        if (getPosition().y < ((position_y_ - 1) * map_.SquareSize() + getRadius()) + (percent * speed_ * elapsed.asSeconds())) {
+            setPosition(position_x_ * map_.SquareSize() + getRadius(), (position_y_ - 1) * map_.SquareSize() + getRadius());
         }
         else {
             move(0.f, -speed_ * elapsed.asSeconds());
@@ -118,8 +144,8 @@ int Player::ReturnScore() {
 bool Player::EvenPosition() {
     if (getPosition().x == static_cast<int>(getPosition().x) &&
         getPosition().y == static_cast<int>(getPosition().y) &&
-        static_cast<int>(getPosition().x) % static_cast<int>(map_.SquareSize()) == 0 &&
-        static_cast<int>(getPosition().y) % static_cast<int>(map_.SquareSize()) == 0) {
+        static_cast<int>(getPosition().x - getRadius()) % static_cast<int>(map_.SquareSize()) == 0 &&
+        static_cast<int>(getPosition().y - getRadius()) % static_cast<int>(map_.SquareSize()) == 0) {
         return true;
     }
     return false;

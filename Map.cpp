@@ -26,6 +26,7 @@ Map::Map(sf::RenderWindow& window) : window_(window), player_(*this, 1, 1), npc_
     if (!coin_sound_.loadFromFile("game-treasure-coin.wav")) {
         std::cout << "Couldn't load coin sound" << std::endl;
     }
+    //window_.setSize(sf::Vector2u(y_x_map_[0].size() * square_size_, (y_x_map_.size() + 1) * square_size_));
 }
 
 void Map::DrawItems() {
